@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Final Question</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Color Palette */
+            --bg-grad-1: #fde7ea;
+            --bg-grad-2: #f0c3d2;
+            --card-bg: #FFFFFF;
+            --text-color: #2c3e50;
+            --btn-yes-bg: #2ecc71;
+            --btn-yes-hover: #27ae60;
+            --btn-no-bg: #e74c3c;
+            --btn-no-hover: #c0392b;
+            --love-color: #e91e63;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-grad-1), var(--bg-grad-2));
+            background-size: 200% 200%;
+            animation: gradient-animation 10s ease infinite;
+            padding: 20px;
+            overflow: hidden; /* No scrollbars */
+        }
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* The main "card" */
+        .container {
+            text-align: center;
+            background: var(--card-bg);
+            padding: 40px 50px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            position: relative; /* "Sandbox" for buttons */
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-gif {
+            margin-top: -40%;
+            width: 500px;
+            height: 500px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 38px;
+            font-weight: 800;
+            color: var(--text-color);
+            margin-bottom: 80px;
+            margin-top: -35%;
+        }
+
+        .btn {
+            font-family: 'Nunito', sans-serif;
+            padding: 15px 30px;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            transition: all 0.3s ease;
+        }
+
+        #yes-btn {
+            background-color: var(--btn-yes-bg);
+            left: 80px;
+            bottom: 100px;
+            transform-origin: center;
+        }
+
+        #yes-btn:hover {
+            background-color: var(--btn-yes-hover);
+            transform: scale(1.05);
+        }
+
+        #no-btn {
+            background-color: var(--btn-no-bg);
+            right: 80px;
+            bottom: 100px;
+            /* The "No" button no longer moves */
+        }
+
+        /* This is the "head shake" animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-10px); }
+            80% { transform: translateX(10px); }
+        }
+
+        .shake {
+            animation: shake 0.3s ease-out;
+        }
+
+        .container.success h1 {
+            color: var(--love-color);
+            margin-bottom: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-container">
+        
+        <img src="shy.png" 
+             alt="Shy emoji asking" 
+             class="main-gif" 
+             id="main-gif">
+        
+        <h1 id="message">Do you love me? 🤔</h1>
+        
+        <button class="btn" id="yes-btn">Yes, I ❤️ U.</button>
+        <button class="btn" id="no-btn">No 😥</button>
+    </div>
+
+    <script>
+        const container = document.getElementById('main-container');
+        const yesButton = document.getElementById('yes-btn');
+        const noButton = document.getElementById('no-btn');
+        const mainGif = document.getElementById('main-gif');
+        const message = document.getElementById('message');
+
+        // This array holds the text for each "No" click
+        const noMessages = [
+            "No ",
+            "Are you sure?",
+            "Really?",
+            "Think again!",
+            "Emergency!!",
+            "Don't do this...",
+            "I'm begging you!",
+            "Last chance!"
+        ];
+
+        // ***NEW: This array holds the GIF for each "No" click***
+        // NOTE: You must replace these with your actual image file names.
+        // Make sure you have 8 images in this list.
+        const noGifs = [
+            "gif-1.png", // Image for "No "
+            "gif-2.png", // Image for "Are you sure?"
+            "gif-3.png", // Image for "Really?"
+            "gif-4.png", // Image for "Think again!"
+            "gif-5.png", // Image for "Emergency!!"
+            "gif-6.png", // Image for "Don't do this..."
+            "gif-7.png", // Image for "I'm begging you!"
+            "gif-8.png"  // Image for "Last chance!"
+        ];
+
+        let noMessageIndex = 0;
+        let yesButtonScale = 1;
+        let yesFontSize = 20;
+        let isShaking = false; 
+
+        // --- This is the "Yes" action ---
+        function triggerYes() {
+            container.classList.add('success');
+            mainGif.src = "Shy-1.png"; // Final "Yes" image
+            message.innerText = "I ❤️ U, too! 🥰 Bbe";
+            
+            yesButton.style.display = 'none';
+            noButton.style.display = 'none';
+        }
+
+        // --- "Yes" Button Click ---
+        yesButton.addEventListener('click', triggerYes);
+
+        // --- "No" Button Click (UPDATED LOGIC) ---
+        noButton.addEventListener('click', () => {
+            // If it's on the last message, trigger "Yes"
+            if (noMessageIndex === noMessages.length) {
+                triggerYes();
+                return; 
+            }
+
+            if (isShaking) return;
+            isShaking = true;
+
+            // 1. Update text from your list
+            noButton.innerText = noMessages[noMessageIndex];
+
+            // ***NEW: Update the main GIF***
+            mainGif.src = noGifs[noMessageIndex];
+            
+            // Move to the next message/gif
+            noMessageIndex++; 
+
+            // 2. Make the "Yes" button grow
+            yesButtonScale += 0.4;
+            yesFontSize += 3;
+            yesButton.style.transform = `scale(${yesButtonScale})`;
+            yesButton.style.fontSize = `${yesFontSize}px`;
+
+            // 3. SHAKE the button
+            noButton.classList.add('shake');
+            
+            // 4. After the shake (300ms), allow clicking again
+            setTimeout(() => {
+                noButton.classList.remove('shake');
+                isShaking = false;
+            }, 300); // Must match the shake animation duration
+        });
+
+    </script>
+
+</body>
+</html>
